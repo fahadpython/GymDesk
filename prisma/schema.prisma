@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Member {
+  id                   String    @id @default(cuid())
+  name                 String
+  phone                String    @unique
+  address              String?
+  dateOfBirth          DateTime?
+  photoUrl             String?
+  joinDate             DateTime  @default(now())
+  
+  plan                 String    // e.g. "Monthly", "Quarterly", "Half-Yearly", "Yearly"
+  membershipStart      DateTime
+  membershipEnd        DateTime
+  status               String    // "ACTIVE", "EXPIRED", "EXPIRING_SOON"
+  
+  emergencyContactName String?
+  emergencyContactPhone String?
+  notes                String?
+  
+  payments             Payment[]
+  
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+}
+
+model Payment {
+  id               String   @id @default(cuid())
+  member           Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  memberId         String
+  amount           Float
+  months           Int
+  paymentDate      DateTime @default(now())
+  paymentMode      String   // "CASH", "UPI", "CARD"
+  newMembershipEnd DateTime
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
