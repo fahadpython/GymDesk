@@ -6,7 +6,7 @@
   "scripts": {
     "postinstall": "prisma generate",
     "dev": "tsx server.ts",
-    "build": "prisma generate && prisma db push && tsx prisma/seed.ts && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "start": "tsx server.ts",
     "clean": "rm -rf dist",
